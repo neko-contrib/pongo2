@@ -14,11 +14,13 @@ import (
   "github.com/neko-contrib/pongo2"
 )
 
-app := neko.Classic()
-//default: Options{BaseDir: "views", Extension: ".html"}
-//app.Use(pongo2.Renderer())
-app.Use(pongo2.Renderer(&Options{BaseDir: "template/", Extension: ".html"}))
-app.Run(":3000")
+func main() {
+  app := neko.Classic()
+  //default: Options{BaseDir: "views", Extension: ".html"}
+  //app.Use(pongo2.Renderer())
+  app.Use(pongo2.Renderer(&Options{BaseDir: "template/", Extension: ".html"}))
+  app.Run(":3000")
+}
 ~~~
 
 ####type Options
