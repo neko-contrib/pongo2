@@ -8,6 +8,11 @@ import (
 	"testing"
 )
 
+type user struct {
+	Name string
+	age  int
+}
+
 func Test_Render(t *testing.T) {
 	Convey("Normal Render", t, func() {
 		w := httptest.NewRecorder()
@@ -29,10 +34,10 @@ func Test_Render(t *testing.T) {
 		m := neko.New()
 		m.Use(Renderer(Options{BaseDir: "fixtures", Extension: ".html"}))
 		m.GET("/", func(ctx *neko.Context) {
-			ctx.Render("home", map[string]interface{}{"user": "pongo2.v3"}, 200)
+			ctx.Render("user", neko.JSON{"user": &user{Name: "pongo2", age: 3}}, 200)
 		})
 		m.ServeHTTP(w, req)
-		So(w.Body.String(), ShouldEqual, "layout hello pongo2.v3")
+		So(w.Body.String(), ShouldEqual, "hello pongo2, i am 3")
 	})
 
 	Convey("Initial Whith 'BaseDir' Option", t, func() {
