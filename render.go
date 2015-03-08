@@ -66,7 +66,18 @@ func (c *pongoRenderer) Render(view string, context interface{}, status ...int) 
 }
 
 func getContext(data interface{}) pongo2.Context {
-	return pongo2.Context(data.(map[string]interface{}))
+	var d map[string]interface{} = make(map[string]interface{})
+	switch data.(type) {
+	case neko.JSON:
+		for key, val := range data.(neko.JSON) {
+			d[key] = val
+		}
+	case map[string]interface{}:
+		d = data.(map[string]interface{})
+	default:
+		panic("Error: Data type does not supported")
+	}
+	return pongo2.Context(d)
 }
 
 func lastChar(str string) uint8 {
