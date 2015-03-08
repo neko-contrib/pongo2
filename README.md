@@ -18,7 +18,7 @@ func main() {
   app := neko.Classic()
   //default: Options{BaseDir: "views", Extension: ".html"}
   //app.Use(pongo2.Renderer())
-  app.Use(pongo2.Renderer(&Options{BaseDir: "template/", Extension: ".html"}))
+  app.Use(pongo2.Renderer(pongo2.Options{BaseDir: "template/", Extension: ".html"}))
   app.Run(":3000")
 }
 ~~~
