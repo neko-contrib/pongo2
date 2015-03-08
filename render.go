@@ -20,13 +20,13 @@ type (
 
 var pongoCache = map[string]*pongo2.Template{}
 var mutex = &sync.RWMutex{}
-var opt *Options
+var opt Options
 
-func Renderer(options ...*Options) neko.HandlerFunc {
+func Renderer(options ...Options) neko.HandlerFunc {
 	if options != nil {
 		opt = options[0]
 	} else {
-		opt = &Options{BaseDir: "views/", Extension: ".html"}
+		opt = Options{BaseDir: "views/", Extension: ".html"}
 	}
 	if opt.BaseDir == "" {
 		opt.BaseDir = "views/"

@@ -27,7 +27,7 @@ func Test_Render(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/", nil)
 
 		m := neko.New()
-		m.Use(Renderer(&Options{BaseDir: "fixtures", Extension: ".html"}))
+		m.Use(Renderer(Options{BaseDir: "fixtures", Extension: ".html"}))
 		m.GET("/", func(ctx *neko.Context) {
 			ctx.Render("home", map[string]interface{}{"user": "pongo2.v3"}, 200)
 		})
@@ -40,7 +40,7 @@ func Test_Render(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/", nil)
 
 		m := neko.New()
-		m.Use(Renderer(&Options{BaseDir: "fixtures"}))
+		m.Use(Renderer(Options{BaseDir: "fixtures"}))
 		m.GET("/", func(ctx *neko.Context) {
 			ctx.Render("home", map[string]interface{}{"user": "pongo2.v3"}, 200)
 		})
@@ -53,7 +53,7 @@ func Test_Render(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/", nil)
 
 		m := neko.New()
-		m.Use(Renderer(&Options{Extension: ".html"}))
+		m.Use(Renderer(Options{Extension: ".html"}))
 		m.GET("/", func(ctx *neko.Context) {
 			ctx.Render("home", map[string]interface{}{"user": "pongo2.v3"}, 200)
 		})
