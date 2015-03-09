@@ -27,7 +27,7 @@ func Test_Render(t *testing.T) {
 		So(w.Body.String(), ShouldEqual, "")
 	})
 
-	Convey("Initial Whith All Options", t, func() {
+	Convey("Initial with All Options", t, func() {
 		w := httptest.NewRecorder()
 		req, _ := http.NewRequest("GET", "/", nil)
 
@@ -40,7 +40,7 @@ func Test_Render(t *testing.T) {
 		So(w.Body.String(), ShouldEqual, "hello pongo2, i am 3")
 	})
 
-	Convey("Initial Whith 'BaseDir' Option", t, func() {
+	Convey("Initial with 'BaseDir' Option", t, func() {
 		w := httptest.NewRecorder()
 		req, _ := http.NewRequest("GET", "/", nil)
 
@@ -53,7 +53,7 @@ func Test_Render(t *testing.T) {
 		So(w.Body.String(), ShouldEqual, "layout hello pongo2.v3")
 	})
 
-	Convey("Initial Whith 'Extension' Option", t, func() {
+	Convey("Initial with 'Extension' Option", t, func() {
 		w := httptest.NewRecorder()
 		req, _ := http.NewRequest("GET", "/", nil)
 
@@ -64,6 +64,18 @@ func Test_Render(t *testing.T) {
 		})
 		m.ServeHTTP(w, req)
 		So(w.Body.String(), ShouldEqual, "layout hello pongo2.v3")
+	})
+
+	Convey("Unsupported data type", t, func() {
+		w := httptest.NewRecorder()
+		req, _ := http.NewRequest("GET", "/", nil)
+
+		m := neko.New()
+		m.Use(Renderer(Options{Extension: ".html"}))
+		m.GET("/", func(ctx *neko.Context) {
+			ctx.Render("home", "pongo2.v3", 200)
+		})
+		So(func() { m.ServeHTTP(w, req) }, ShouldPanic)
 	})
 
 }
