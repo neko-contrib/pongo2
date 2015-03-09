@@ -69,9 +69,7 @@ func getContext(data interface{}) pongo2.Context {
 	var d map[string]interface{} = make(map[string]interface{})
 	switch data.(type) {
 	case neko.JSON:
-		for key, val := range data.(neko.JSON) {
-			d[key] = val
-		}
+		d = map[string]interface{}(data.(neko.JSON))
 	case map[string]interface{}:
 		d = data.(map[string]interface{})
 	default:
