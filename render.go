@@ -72,6 +72,8 @@ func getContext(data interface{}) pongo2.Context {
 		d = map[string]interface{}(data.(neko.JSON))
 	case map[string]interface{}:
 		d = data.(map[string]interface{})
+	case nil:
+		d = nil
 	default:
 		panic("Error: Data type does not supported")
 	}
