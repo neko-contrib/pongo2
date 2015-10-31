@@ -34,9 +34,9 @@ func main() {
 
 func Home(ctx *neko.Context) {
   // use 'BaseDir' path
-	ctx.Render("default/index", neko.JSON{})
-	// use 'MultiDir' path
-	ctx.Render("#template-key/index", neko.JSON{})
+  ctx.Render("default/index", neko.JSON{})
+  // use 'MultiDir' path
+  ctx.Render("#template-key/index", neko.JSON{})
 }
 ~~~
 
