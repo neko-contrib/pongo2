@@ -18,8 +18,25 @@ func main() {
   app := neko.Classic()
   //default: Options{BaseDir: "views", Extension: ".html"}
   //app.Use(pongo2.Renderer())
-  app.Use(pongo2.Renderer(pongo2.Options{BaseDir: "template/", Extension: ".html"}))
+  
+  app.Use(pongo2.Renderer(
+    pongo2.Options{
+      BaseDir: "template/",
+      MultiDir: map[string]string {
+        "template-key" : "template2/",
+        "custom" : "template3/themes",
+      },
+      Extension: ".html",
+    }),
+  )
   app.Run(":3000")
+}
+
+func Home(ctx *neko.Context) {
+  // use 'BaseDir' path
+	ctx.Render("default/index", neko.JSON{})
+	// use 'MultiDir' path
+	ctx.Render("#template-key/index", neko.JSON{})
 }
 ~~~
 
@@ -28,6 +45,8 @@ func main() {
 type Options struct {
   // BaseDir represents a base directory of the pongo2 templates.
   BaseDir string
+  // MultiDir multiple directories of the pongo2 templates.
+  MultiDir map[string]string
   // Extension represents an extension of files.
   Extension string
 }
