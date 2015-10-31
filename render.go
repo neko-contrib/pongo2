@@ -4,12 +4,16 @@ import (
 	"github.com/rocwong/neko"
 	"gopkg.in/flosch/pongo2.v3"
 	"sync"
+	"regexp"
+	"strings"
 )
 
 type (
 	Options struct {
 		// BaseDir represents a base directory of the pongo2 templates.
 		BaseDir string
+		// MultiDir multiple directories of the pongo2 templates.
+		MultiDir map[string]string
 		// Extension represents an extension of files.
 		Extension string
 	}
@@ -18,6 +22,7 @@ type (
 	}
 )
 
+var reg *regexp.Regexp
 var pongoCache = map[string]*pongo2.Template{}
 var mutex = &sync.RWMutex{}
 var opt Options
@@ -34,9 +39,16 @@ func Renderer(options ...Options) neko.HandlerFunc {
 	if opt.Extension == "" {
 		opt.Extension = ".html"
 	}
-	if lastChar(opt.BaseDir) != '/' {
+	if !strings.HasSuffix(opt.BaseDir, "/") {
 		opt.BaseDir += "/"
 	}
+	for k, v := range opt.MultiDir {
+		if !strings.HasSuffix(v, "/") {
+			opt.MultiDir[k] += "/"
+		}
+	}
+	reg, _ = regexp.Compile(`^#([\w-]+)/(.+)$`)
+
 	return func(ctx *neko.Context) {
 		ctx.HtmlEngine = &pongoRenderer{context: ctx}
 	}
@@ -48,7 +60,14 @@ func (c *pongoRenderer) Render(view string, context interface{}, status ...int) 
 	mutex.RUnlock()
 
 	if !ok {
-		template, err = pongo2.FromFile(opt.BaseDir + view + opt.Extension)
+		match := reg.FindStringSubmatch(view)
+
+		if len(match) == 3 && len(opt.MultiDir[match[1]]) > 0 {
+			template, err = pongo2.FromFile(opt.MultiDir[match[1]] + match[2] + opt.Extension)
+		} else {
+			template, err = pongo2.FromFile(opt.BaseDir + view + opt.Extension)
+		}
+
 		if err != nil {
 			return err
 		}
@@ -80,7 +99,3 @@ func getContext(data interface{}) pongo2.Context {
 	return pongo2.Context(d)
 }
 
-func lastChar(str string) uint8 {
-	size := len(str)
-	return str[size-1]
-}
