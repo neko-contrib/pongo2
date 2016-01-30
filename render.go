@@ -58,7 +58,6 @@ func (c *pongoRenderer) Render(view string, context interface{}, status ...int) 
 	mutex.RLock()
 	template, ok := pongoCache[view]
 	mutex.RUnlock()
-
 	if !ok {
 		match := reg.FindStringSubmatch(view)
 
@@ -67,8 +66,9 @@ func (c *pongoRenderer) Render(view string, context interface{}, status ...int) 
 		} else {
 			template, err = pongo2.FromFile(opt.BaseDir + view + opt.Extension)
 		}
-
 		if err != nil {
+			c.context.Writer.WriteHeader(500)
+			c.context.Writer.Write([]byte(err.Error()))
 			return err
 		}
 		mutex.Lock()
